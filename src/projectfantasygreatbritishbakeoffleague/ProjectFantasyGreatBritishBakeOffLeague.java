@@ -19,29 +19,3 @@ public class ProjectFantasyGreatBritishBakeOffLeague {
     }
     
 }
-
-
-public class BbakerMenu {
-
-    
-}
-
-public class BbakerReadWrite {
-
-    
-}
-
-public class BbakerCore {
-
-    
-}
-
-public class BbakerInput {
-
-    
-}
-
-public class BbakerStore {
-
-    
-}

@@ -21,6 +21,7 @@ public class BbakerMenu {
         System.out.println("0. Exit menu");
         System.out.println("1. Make prediction");
         System.out.println("2. Show predictions");
+        System.out.println("3. Show all users predictions");
         System.out.println("\n");
         
                 
@@ -29,6 +30,9 @@ public class BbakerMenu {
         
         while (!bInputOk) {
             Scanner sc  = new Scanner(System.in);
+            
+            BbakerMainLogic mainLogic =  new BbakerMainLogic();
+            BbakerInput userInp = new BbakerInput();
             
             try {
                 //choice = (char) System.in.read();
@@ -44,13 +48,20 @@ public class BbakerMenu {
                     case "1":
                         System.out.println("Make prediction");
                         bInputOk = true;
-                        // ToDO: HERE CALL to Input user data
+                        mainLogic.doUserPrediction();
                         break;
 
                     case "2":
                         System.out.println("Show predictions");
                         bInputOk = true;
-                        // ToDO: HERE CALL to show user data
+                        String PlayerName = userInp.getUserName("Please, enter your name:");
+                        mainLogic.getUserPredictions(PlayerName);
+                        break;
+
+                    case "3":
+                        System.out.println("Show all users predictions");
+                        bInputOk = true;
+                        mainLogic.getAllUsersPredictions();
                         break;
                         
                     default:

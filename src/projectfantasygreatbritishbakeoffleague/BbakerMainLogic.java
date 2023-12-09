@@ -24,4 +24,10 @@ public class BbakerMainLogic {
          System.out.println(UserName + " lets make a prediction!");
          System.out.println("---------------------------------\n");
     }  
+
+    public void AdminEnterData(){
+         System.out.println("AdminEnterData");
+         System.out.println("---------------------------------\n");
+    }      
+    
 }

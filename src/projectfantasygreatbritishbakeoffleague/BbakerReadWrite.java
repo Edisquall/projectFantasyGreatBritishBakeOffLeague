@@ -10,4 +10,29 @@ package projectfantasygreatbritishbakeoffleague;
  */
 public class BbakerReadWrite {
     
+    public boolean writePlayerData2File(String playerName){
+        return true;
+    }
+
+    public String readPlayerDatafromFile(String playerName){
+        return playerName;
+    }    
+    
+    public boolean writeAllPlayersData2File(){
+        return true;
+    }
+
+    public String readAllPlayerDatafromFile(){
+        return "ALL";
+    }    
+
+    public boolean AdminWriteContentantsData2File(String data){
+        return true;
+    }   
+    
+    public String AdminReadContentantsDatafromFile(){
+        return "ALL";
+    }     
+
+    
 }

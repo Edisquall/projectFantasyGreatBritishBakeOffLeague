@@ -17,14 +17,13 @@ public class BbakerMenu {
         String choice;
         String PlayerName;
                 
-        System.out.println("USER MENU");
-        System.out.println("----------");
+        System.out.println("...----==== USER MENU ====----...");
         System.out.println("0. Exit menu");
         System.out.println("1. Make prediction");
         System.out.println("2. Show predictions");
         System.out.println("3. Show all users predictions");
-        System.out.println("\n");
-        
+        System.out.println("4. Enter contestant data (Admin)");
+        System.out.println("--------------------------------\n");
                 
         boolean bInputOk = false;
         System.out.println("Please, enter menu number:");
@@ -34,6 +33,7 @@ public class BbakerMenu {
             
             BbakerMainLogic mainLogic =  new BbakerMainLogic();
             BbakerInput userInp = new BbakerInput();
+            BbakerPlayer admin = new BbakerPlayer("1234");
             
             try {
                 //choice = (char) System.in.read();
@@ -65,6 +65,17 @@ public class BbakerMenu {
                         bInputOk = true;
                         mainLogic.getAllUsersPredictions();
                         break;
+                        
+                    case "4":
+                        String adminPass = userInp.getUserName("Please, enter admin's password:");
+                        if (admin.IsAdmin(adminPass)) {
+                            bInputOk = true;
+                            mainLogic.AdminEnterData();
+                        } else {
+                            System.out.println("Wrong admin's password!");
+                            System.out.println("Please, enter menu number:");
+                        }
+                        break;                        
                         
                     default:
                         System.out.println("Please, enter menu number:");

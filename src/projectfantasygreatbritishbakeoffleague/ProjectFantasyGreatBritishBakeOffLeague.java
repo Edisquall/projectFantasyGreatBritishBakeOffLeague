@@ -15,7 +15,8 @@ public class ProjectFantasyGreatBritishBakeOffLeague {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //111
+        BbakerMenu userMenu = new BbakerMenu();
+        userMenu.Show();
     }
     
 }

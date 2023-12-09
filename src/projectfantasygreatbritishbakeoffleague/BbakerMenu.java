@@ -15,6 +15,7 @@ public class BbakerMenu {
 
     public void Show() {
         String choice;
+        String PlayerName;
                 
         System.out.println("USER MENU");
         System.out.println("----------");
@@ -46,20 +47,21 @@ public class BbakerMenu {
                         break;  
 
                     case "1":
-                        System.out.println("Make prediction");
+                        System.out.println("Make prediction\n");
                         bInputOk = true;
-                        mainLogic.doUserPrediction();
+                        PlayerName = userInp.getUserName("Please, enter your name:");
+                        mainLogic.doUserPrediction(PlayerName);
                         break;
 
                     case "2":
-                        System.out.println("Show predictions");
+                        System.out.println("Show predictions\n");
                         bInputOk = true;
-                        String PlayerName = userInp.getUserName("Please, enter your name:");
+                        PlayerName = userInp.getUserName("Please, enter your name:");
                         mainLogic.getUserPredictions(PlayerName);
                         break;
 
                     case "3":
-                        System.out.println("Show all users predictions");
+                        System.out.println("Show all users predictions\n");
                         bInputOk = true;
                         mainLogic.getAllUsersPredictions();
                         break;

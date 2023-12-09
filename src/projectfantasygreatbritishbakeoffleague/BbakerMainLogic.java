@@ -10,15 +10,18 @@ package projectfantasygreatbritishbakeoffleague;
  */
 public class BbakerMainLogic {
     
-     public String getUserPredictions(String UserName){
-         return UserName;
+     public void getUserPredictions(String UserName){
+         System.out.println(UserName + "'s  predictions:");
+         System.out.println("------------------------\n");
      }
      
-     public String getAllUsersPredictions(){
-         return "ALL";
+     public void getAllUsersPredictions(){
+         System.out.println("All users' predictions:");
+         System.out.println("----------------------\n");
      }
      
-    public String doUserPrediction(){
-        return "ALL";
+    public void doUserPrediction(String UserName){
+         System.out.println(UserName + " lets make a prediction!");
+         System.out.println("---------------------------------\n");
     }  
 }

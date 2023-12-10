@@ -60,6 +60,10 @@ public class BbakerMenu {
         System.exit(0);
     }
     
+    public void inWork() {
+        System.out.println("In developing. Drop on later\n");
+    }
+    
     public void Show() {
         String choice;
 
@@ -75,13 +79,15 @@ public class BbakerMenu {
                         break;  
 
                     case "1":
-                        System.out.println("Make my prediction\n");
-                        mainLogic.doUserPrediction(currentPlayer.getName());
+                        inWork();
+                        //System.out.println("Make my prediction\n");
+                        //mainLogic.doUserPrediction(currentPlayer.getName());
                         break;
 
                     case "2":
-                        System.out.println("Show my predictions\n");
-                        mainLogic.getUserPredictions(currentPlayer.getName());
+                        inWork();
+                        //System.out.println("Show my predictions\n");
+                        //mainLogic.getUserPredictions(currentPlayer.getName());
                         break;
 
                     case "3":
@@ -99,14 +105,15 @@ public class BbakerMenu {
                     case "5":
                         String adminPass = userInp.getUserInput("Please, enter admin's password:");
                         if (admin.IsAdmin(adminPass)) {
-                            mainLogic.AdminEnterData();
+                            //mainLogic.AdminEnterData();
+                            inWork();
                         } else {
                             System.out.println("Wrong admin's password!");
                             System.out.println("Please, enter menu number:");
                         }
                         break;                        
 
-                    case "6":
+                    case "6": // For test purposes only. WILL BE REMOVED SOON
                         clearScreen();
                         System.out.println("DEBUG\n");
                         mainLogic.getAllUsersScore();

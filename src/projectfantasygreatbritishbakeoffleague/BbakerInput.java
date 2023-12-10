@@ -7,7 +7,6 @@ package projectfantasygreatbritishbakeoffleague;
 import java.util.Scanner;
 
 /**
- *
  * @author Yevhen
  */
 public class BbakerInput {

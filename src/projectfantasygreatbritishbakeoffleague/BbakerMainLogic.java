@@ -20,7 +20,7 @@ public class BbakerMainLogic {
     public int totalContestantsCount = 0;
 
     public BbakerMainLogic(){
-        System.out.println("Init BbakerMainLogic");
+        //System.out.println("Init BbakerMainLogic");
         InitPlayers();
         InitContestants();
     }    
@@ -36,12 +36,14 @@ public class BbakerMainLogic {
     }
     
     public void CountPlayers(){
+        totalPlayersCount = 0;
         for (String c: players ) {           
             if (c!=null ) totalPlayersCount++;
         }        
     }
     
     public void CountContestants(){
+        totalContestantsCount = 0;
         for (String p: contestants) {           
             if (p!=null ) totalContestantsCount++;
         }        

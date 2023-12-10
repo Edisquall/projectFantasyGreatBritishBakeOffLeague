@@ -8,11 +8,11 @@ import java.util.Scanner;
 
 /**
  *
- * @author User
+ * @author Yevhen
  */
 public class BbakerInput {
     
-    public String getUserName(String message){
+    public String getUserInput(String message){
         String useInput = "";
         Scanner sc  = new Scanner(System.in);
         boolean bInputOk = false;

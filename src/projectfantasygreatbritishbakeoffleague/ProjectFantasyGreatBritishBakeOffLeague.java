@@ -6,7 +6,7 @@ package projectfantasygreatbritishbakeoffleague;
 
 /**
  *
- * @authors Edi
+ * @authors Yevhen
  */
 public class ProjectFantasyGreatBritishBakeOffLeague {
 

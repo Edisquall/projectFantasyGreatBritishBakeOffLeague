@@ -4,13 +4,132 @@
  */
 package projectfantasygreatbritishbakeoffleague;
  
-
 /**
  * @author Yevgen
  */
 public class BbakerMainLogic {
     
     BbakerReadWrite rwFile =  new BbakerReadWrite();
+
+    private int MaxPlayersCount = 100;
+    private String[] players = new String[MaxPlayersCount];
+    private String[] predictions = new String[MaxPlayersCount];
+    private String[] contestants = new String[MaxPlayersCount];
+    
+    public int totalPlayersCount = 0;
+    public int totalContestantsCount = 0;
+
+    public BbakerMainLogic(){
+        System.out.println("Init BbakerMainLogic");
+        InitPlayers();
+        InitContestants();
+    }    
+
+    public void InitPlayers(){
+        if (!LoadPlayers()) InitPlayersTest();
+        CountPlayers();
+    }
+
+    public void InitContestants(){
+        if (!LoadContestants()) InitContestantsTest();
+        CountContestants();
+    }
+    
+    public void CountPlayers(){
+        for (String c: players ) {           
+            if (c!=null ) totalPlayersCount++;
+        }        
+    }
+    
+    public void CountContestants(){
+        for (String p: contestants) {           
+            if (p!=null ) totalContestantsCount++;
+        }        
+    }    
+    
+    public void InitPlayersTest(){
+        // FORMAT: PlayerName, TotalScore
+        players[0] = "John,10";
+        players[1] = "James,6";
+        players[2] = "Sam,2";
+        CountPlayers();
+    }
+
+    public void InitContestantsTest(){
+        // FORMAT: ContestantName, type, points
+        // type can be:
+        // active - still in list
+        // eliminated
+        
+        int ind = 0;
+        contestants[ind] = "Dan,active,1";
+        contestants[++ind] = "Josh,active,20";
+        contestants[++ind] = "Matty,active,30";
+        contestants[++ind] = "Tasha,active,20";
+        contestants[++ind] = "Cristy,eliminated,0";
+        CountContestants();
+    }
+    
+    public boolean LoadPlayers(){  // Load players from file
+       return rwFile.loadFromFile(players, rwFile.playersFile);
+    }    
+ 
+    public boolean SavePlayers(){  // Save players 2 file
+        return rwFile.Save2File(players, rwFile.playersFile);
+    }     
+    
+    public boolean LoadContestants(){  // Load players from file
+       return rwFile.loadFromFile(contestants, rwFile.contestantsFile);
+    }    
+ 
+    public boolean SaveContestants(){  // Save players 2 file
+        return rwFile.Save2File(contestants, rwFile.contestantsFile);
+    }   
+    
+    public void ShowPlayersTable(){
+        if (totalPlayersCount==0) {
+            System.out.println("No players found");
+            return;
+        }
+        // List players
+        int cnt=0;
+        String csvSplitBy = ",";
+        System.out.println("#\tName\t\tPoints\t");
+        System.out.println("-----------------------------------");
+        for (String p: players) {
+            if (p!=null ) {
+                cnt++;
+                int indName = 0, indPoints = 1;
+                String[] playerData = p.split(csvSplitBy);
+                System.out.println(cnt + "\t" + playerData[indName] + "\t\t" + playerData[indPoints]);
+            }
+        }
+        System.out.println("-----------------------------------");
+        System.out.println("Total players: " + totalPlayersCount + "\n");        
+    }    
+    
+    
+    public void ShowContestantsTable() {
+        if (totalContestantsCount==0) {
+            System.out.println("No contestants found");
+            return;
+        }
+        // List players
+        int cnt=0;
+        String csvSplitBy = ",";
+        System.out.println("#\tName\t\tState\t\tPoints\t");
+        System.out.println("---------------------------------------------------");
+        for (String p: contestants) {
+            if (p!=null ) {
+                cnt++;
+                int indName = 0, indState = 1, indPoints = 2;
+                String[] ContestantData = p.split(csvSplitBy);
+                System.out.println(cnt + "\t" + ContestantData[indName] + "\t\t" + ContestantData[indState] + "\t\t" + ContestantData[indPoints] );
+            }
+        }
+        System.out.println("----------------------------------------------------");
+        System.out.println("Total contestants: " + totalContestantsCount + "\n");          
+    }
     
     public void makeWeeklyOutcome(){
         //weekly 
@@ -41,16 +160,24 @@ public class BbakerMainLogic {
         rwFile.readPlayerDatafromFile(UserName);
      }
      
-     public void getAllUsersPredictions(){
-        System.out.println("All users' predictions:");
-        System.out.println("----------------------\n");
-        rwFile.readAllPlayerDatafromFile();
+     public void getAllUsersScore(){
+        ShowPlayersTable();
      }
+
+     public void getAllContestants(){
+        ShowContestantsTable();
+     }     
+     
      
     public void doUserPrediction(String UserName){
-        System.out.println(UserName + " lets make a prediction!");
+        System.out.println(UserName + ", lets make a prediction!");
         System.out.println("---------------------------------\n");
-        rwFile.writePlayerData2File(UserName);
+
+        //
+                
+        // is Player new and has not selected contestants to bid ?
+        // Get list of contestants
+
     }  
 
     public void AdminEnterData(){

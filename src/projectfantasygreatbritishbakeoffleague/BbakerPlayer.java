@@ -6,13 +6,17 @@ package projectfantasygreatbritishbakeoffleague;
 
 /**
  *
- * @author User
+ * @author Yevhen
  */
 public class BbakerPlayer {
     private String name;
     private double score;
     private String passHash;
 
+    public BbakerPlayer(){
+        score = 0;
+        passHash = "";
+    }
     public BbakerPlayer(String pass){
         passHash = "<<<" + pass + ">>>";
     }

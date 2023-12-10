@@ -4,19 +4,26 @@
  */
 package projectfantasygreatbritishbakeoffleague;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.time.LocalDate;  
 import java.time.temporal.WeekFields;  
 import java.util.Locale; 
 
 /**
- *
- * @author User
+ * @author Yevhen
  */
 public class BbakerReadWrite {
     
     private String historyDataFile = "FantasyGBBO.csv";
     public String weeklyOutcomesFile = "outcomes.csv";
-
+    public String playersFile = "players.csv";
+    public String contestantsFile = "contestants.csv";
+    
+    private boolean verboseErrors = false;
+ 
     public void BbakerReadWrite() {
         this.weeklyOutcomesFile = "outcomes_w"+getCurrentWeekNumber()+".csv";
     }
@@ -27,6 +34,61 @@ public class BbakerReadWrite {
         int week = date.get(weekFields.weekOfWeekBasedYear());
         return String. valueOf(week);
     }    
+
+    public boolean loadFromFile(String[] _players, String FileName) {
+        BufferedReader inputF;
+        try {
+            inputF = new BufferedReader(new FileReader(FileName));
+            String line;
+            int Index = 0;
+            while ((line = inputF.readLine()) != null) {
+                _players[Index] = line;
+                Index++;
+                //String[] rowData = line.split(csvSplitBy);
+                //if (!rowData[0].equalsIgnoreCase("Username")) {
+                    // Clear player picks (contestants) by not adding them to the updated content
+                //} else {
+                    
+                //}
+            }
+            inputF.close();
+            return true;
+        } catch (Exception e) {
+            if(verboseErrors) System.out.println("ERROR [loadFromFile]: " + e);
+            return false;
+        }
+        
+    }
+
+    public boolean Save2File(String[] _players, String FileName) {
+        BufferedWriter outputF;
+        try {
+            outputF = new BufferedWriter(new FileWriter(FileName));
+
+            // Count not null strings = count of players
+            int totItems = 0;
+            for (String p: _players) {           
+                if (p!=null ) totItems++;
+            }
+            
+            int cnt = 0;
+            //System.out.println(totPlayers);
+            for (String p: _players) {           
+                if (p!=null ) {
+                    outputF.write(p);
+                    cnt++;
+                    if (cnt<totItems) outputF.newLine();
+                } 
+            }
+            outputF.close();
+            return true;
+            
+        } catch (Exception e) {
+            if (verboseErrors) System.out.println("ERROR [Save2File]: " + e);
+            return false;
+        }
+        
+    }
     
     public String getWeeklyOutcomesFile() {
         return weeklyOutcomesFile;

@@ -3,13 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package projectfantasygreatbritishbakeoffleague;
- 
-/**
+ /**
  * @author Yevgen
+ * 
+ * Known issues:
+ * -------------
+ * System supports only one destinct name of player. One needs enter usage of a pair of name and password as a way of solving OR DataBase!
  */
+
+import java.util.Scanner;
+
 public class BbakerMainLogic {
-    
-    BbakerReadWrite rwFile =  new BbakerReadWrite();
+    private Scanner sc  = new Scanner(System.in);
+    private BbakerInput userInp = new BbakerInput();    
+    public BbakerReadWrite rwFile =  new BbakerReadWrite();
 
     private int MaxPlayersCount = 100;
     private String[] players = new String[MaxPlayersCount];
@@ -23,6 +30,7 @@ public class BbakerMainLogic {
         //System.out.println("Init BbakerMainLogic");
         InitPlayers();
         InitContestants();
+        rwFile.Log2File("Init system");
     }    
 
     public void InitPlayers(){
@@ -98,10 +106,10 @@ public class BbakerMainLogic {
         String csvSplitBy = ",";
         System.out.println("#\tName\t\tPoints\t");
         System.out.println("-----------------------------------");
+        int indName = 0, indPoints = 1;
         for (String p: players) {
             if (p!=null ) {
                 cnt++;
-                int indName = 0, indPoints = 1;
                 String[] playerData = p.split(csvSplitBy);
                 System.out.println(cnt + "\t" + playerData[indName] + "\t\t" + playerData[indPoints]);
             }
@@ -121,10 +129,10 @@ public class BbakerMainLogic {
         String csvSplitBy = ",";
         System.out.println("#\tName\t\tState\t\tPoints\t");
         System.out.println("---------------------------------------------------");
+        int indName = 0, indState = 1, indPoints = 2;
         for (String p: contestants) {
             if (p!=null ) {
                 cnt++;
-                int indName = 0, indState = 1, indPoints = 2;
                 String[] ContestantData = p.split(csvSplitBy);
                 System.out.println(cnt + "\t" + ContestantData[indName] + "\t\t" + ContestantData[indState] + "\t\t" + ContestantData[indPoints] );
             }
@@ -132,36 +140,50 @@ public class BbakerMainLogic {
         System.out.println("----------------------------------------------------");
         System.out.println("Total contestants: " + totalContestantsCount + "\n");          
     }
+
+    public boolean IsPlayerNew(String UserName) {
+        //String cPlayerName = currentPlayer.getName();
+        if (totalPlayersCount==0) return true;
+        int indName = 0, indPoints = 1;
+        String csvSplitBy = ",";
+        for (String p: players) {
+            if (p!=null ) {
+                String[] playerData = p.split(csvSplitBy);
+                if (UserName.equalsIgnoreCase( playerData[indName])) {
+                    ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.setScore(Double.valueOf(playerData[indPoints]));
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     
-    public void makeWeeklyOutcome(){
-        //weekly 
+    public void ShowPlayerInfo(){
+        System.out.println("User name: " + ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getName() ); 
+        System.out.println("User score: " + ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getScore() ); 
+        System.out.println("----------------------------------------------------");
+        //List of users predicts
     }
     
     public void updatePlayersPredictions(){
          //Recalculate users scores after admin update contestants data
                   
-//        Weekly points awarded up to and including episode nine:
-//            Correct nomination of the Best Baker = 4 points
-//            If your nominated Best Baker is eliminated, then 1 point will be deducted from your total
-//            Correct weekly nomination of baker to leave = 3 points
-//            If your nominated baker to leave is the Best Baker 1 point will be deducted from your total.
-//            Correct nomination of the winner of that week’s technical round = 2 points
-//
-//        Points awarded at the end of the final episode of the series:
-//            Overall winner chosen after episode one and before episode two = 7 points
-//            The other two finalists chosen after episode one and before episode two = 2 points each
-//            Winner of the final episode, chosen after episode nine = 4 points
-//            No technical round or elimination nominations for the final episode
+        //        Weekly points awarded up to and including episode nine:
+        //            Correct nomination of the Best Baker = 4 points
+        //            If your nominated Best Baker is eliminated, then 1 point will be deducted from your total
+        //            Correct weekly nomination of baker to leave = 3 points
+        //            If your nominated baker to leave is the Best Baker 1 point will be deducted from your total.
+        //            Correct nomination of the winner of that week’s technical round = 2 points
+        //
+        //        Points awarded at the end of the final episode of the series:
+        //            Overall winner chosen after episode one and before episode two = 7 points
+        //            The other two finalists chosen after episode one and before episode two = 2 points each
+        //            Winner of the final episode, chosen after episode nine = 4 points
+        //            No technical round or elimination nominations for the final episode
          
          
      }
-     
-     public void getUserPredictions(String UserName){
-        System.out.println(UserName + "'s  predictions:");
-        System.out.println("------------------------\n");
-        rwFile.readPlayerDatafromFile(UserName);
-     }
-     
+    
      public void getAllUsersScore(){
         ShowPlayersTable();
      }
@@ -170,16 +192,152 @@ public class BbakerMainLogic {
         ShowContestantsTable();
      }     
      
+     public String getAllContestantsHintList(){
+        String strOut = "";
+        if (totalContestantsCount==0) {
+            System.out.println("No contestants found");
+            return strOut;
+        }
+        String csvSplitBy = ",";
+        int indName = 0, indState = 1, indPoints = 2, cnt = 0;
+        for (String p: contestants) {
+            if (p!=null ) {
+                cnt++;
+                String[] ContestantData = p.split(csvSplitBy);
+                strOut = strOut + ContestantData[indName]; 
+                if (cnt<totalContestantsCount) strOut += ",";
+            }
+        }
+        return "(" +strOut + ")";
+     }
      
-    public void doUserPrediction(String UserName){
-        System.out.println(UserName + ", lets make a prediction!");
-        System.out.println("---------------------------------\n");
+     public String getChoosenContestantName(String NameToCheck){
+        String strOut = "";
+        if (totalContestantsCount==0) return strOut;
+        String csvSplitBy = ",";
+        int indName = 0, indState = 1, indPoints = 2;
+        for (String p: contestants) {
+            if (p!=null ) {
+                String[] ContestantData = p.split(csvSplitBy);
+                if ( NameToCheck.equalsIgnoreCase( ContestantData[indName])) {
+                    strOut = ContestantData[indName];
+                    return strOut;
+                }  
+            }
+        }
+        return strOut;
+     }     
 
-        //
+    public String AskPlayerForContestantName(String smessage) {
+        String ContestantName;
+        do  {
+            ContestantName = userInp.getUserInput(smessage);
+        } while (ContestantName.isEmpty());
+        return ContestantName;
+    }
+    
+    public boolean ShowPlayerPredictions() {
+        
+        String cPlayerName = ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getName();
+        boolean isNew = ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getIsNewPlayer();        
+        
+        if (totalPlayersCount==0 || isNew) {
+            System.out.println("No predictions found");
+            return false;
+        }
+        
+        String csvSplitBy = ",";
+
+        int indName = 0, indPoints = 1, indBestBaker = 2, indBakertoLeave = 3, indWinnerTechnical = 4;
+        
+        for (String p: players) {
+            if (p!=null ) {
+                String[] playerData = p.split(csvSplitBy);
+                if (cPlayerName.equalsIgnoreCase(playerData[indName])) {
+                    System.out.println(playerData[indName] + ", your score is " + String.format("%.2f", Double.valueOf(playerData[indPoints]) ) );
+                    System.out.println("---------------------------------------------------");                    
+                    System.out.println("Nominate the Best Baker: " + playerData[indBestBaker]);
+                    System.out.println("Nominate the Baker to Leave: " + playerData[indBakertoLeave]);
+                    System.out.println("Nominate the Winner of Technical Round: " + playerData[indWinnerTechnical]);
+                    System.out.println("---------------------------------------------------"); 
+                    return true;
+                }
                 
-        // is Player new and has not selected contestants to bid ?
-        // Get list of contestants
+            }
+        }
+        return false;
+    }
+    
+    public boolean setPlayerPredictions(String Name1, String Name2, String Name3) {
 
+        String cPlayerName = ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getName();
+        double score = ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getScore() ;
+        boolean isNew = ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getIsNewPlayer();
+        int Ind = 0;
+        if (totalPlayersCount==0 || isNew ) {
+            if (totalPlayersCount!=0) Ind = totalPlayersCount+1;
+            players[Ind] = cPlayerName + "," + score + "," + Name1 + "," + Name2 + "," + Name3;
+            SavePlayers();
+            return true;
+        } else {
+            int indName = 0, indPoints = 1;
+            String csvSplitBy = ",";
+            for (int i=0; i<players.length; i++) {
+                if (players[i]!=null ) {
+                    String[] playerData = players[i].split(csvSplitBy);
+                    if (cPlayerName.equalsIgnoreCase( playerData[indName] )) {
+                        players[i] = playerData[indName] + "," + playerData[indPoints] + "," + Name1 + "," + Name2 + "," + Name3;
+                        SavePlayers();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public void doUserPrediction(){
+        System.out.println("Select 3 contestants out of:\n" + getAllContestantsHintList() + "\nOR CANCEL to quit prediction");
+        System.out.println("---------------------------------");
+
+        boolean canGoOn = false;
+        String tmpContestantName1 ="", tmpContestantName2="", tmpContestantName3="";
+        
+        do{
+            tmpContestantName1 = AskPlayerForContestantName("Nominate the Best Baker: ");
+            if(tmpContestantName1.equalsIgnoreCase("cancel")) return;
+            if (!getChoosenContestantName(tmpContestantName1).isEmpty()) canGoOn = true; 
+            if(!canGoOn) System.out.println("Wrong name, try one more time");
+        } while (!canGoOn);
+        System.out.println("For the Best Baker, ["+tmpContestantName1+"] is selected");
+        //setBestBakerNomination()
+
+        canGoOn = false;
+        while (!canGoOn) {
+            tmpContestantName2 = AskPlayerForContestantName("Nominate the Baker to Leave: ");
+            if(tmpContestantName2.equalsIgnoreCase("cancel")) return;
+            if (!getChoosenContestantName(tmpContestantName2).isEmpty()) canGoOn = true;
+            if(!canGoOn) System.out.println("Wrong name, try one more time");
+        }
+        System.out.println("For Baker to Leave, ["+tmpContestantName2+"] is selected");
+        //setBakerToLeaveNomination
+
+        canGoOn = false;
+        while (!canGoOn) {
+            tmpContestantName3 = AskPlayerForContestantName("Nominate the Winner of Technical Round: ");
+            if(tmpContestantName3.equalsIgnoreCase("cancel")) return;
+            if (!getChoosenContestantName(tmpContestantName3).isEmpty()) canGoOn = true;
+            if(!canGoOn) System.out.println("Wrong name, try one more time");
+        }
+        System.out.println("For the Winner of Technical Round, ["+tmpContestantName3+"] is selected");
+        //setTechnicalRoundWinnerNomination
+        
+        if (setPlayerPredictions(tmpContestantName1, tmpContestantName2, tmpContestantName3)) {
+            System.out.println("Done!");
+        } else {
+            System.out.println("Error while saving");
+        }
+        
     }  
 
     public void AdminEnterData(){
@@ -190,7 +348,8 @@ public class BbakerMainLogic {
         // make admin input data then write to file
         String data = " ";
         rwFile.AdminWriteContentantsData2File(data);
-        updatePlayersPredictions();
+        updatePlayersPredictions(); // Recalculate Plaeyrs scores according to new results of show
+
     }      
     
 }

@@ -4,18 +4,21 @@
  */
 package projectfantasygreatbritishbakeoffleague;
 
+
 /**
  *
  * @authors Yevhen
  */
 public class ProjectFantasyGreatBritishBakeOffLeague {
 
+    public static BbakerMenu userMenu;
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        BbakerMenu userMenu = new BbakerMenu();
+        userMenu = new BbakerMenu();
         userMenu.Show();
     }
     

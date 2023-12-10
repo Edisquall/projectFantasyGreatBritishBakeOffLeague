@@ -11,11 +11,21 @@ package projectfantasygreatbritishbakeoffleague;
 public class BbakerPlayer {
     private String name;
     private double score;
+    private boolean isNewPlayer;
     private String passHash;
 
     public BbakerPlayer(){
         score = 0;
         passHash = "";
+        isNewPlayer = true;
+    }
+
+    public boolean getIsNewPlayer() {
+        return isNewPlayer;
+    }
+
+    public void setIsNewPlayer(boolean isNewPlayer) {
+        this.isNewPlayer = isNewPlayer;
     }
     public BbakerPlayer(String pass){
         passHash = "<<<" + pass + ">>>";

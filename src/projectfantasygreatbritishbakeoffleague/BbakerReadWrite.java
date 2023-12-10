@@ -11,7 +11,8 @@ import java.io.FileWriter;
 import java.time.LocalDate;  
 import java.time.temporal.WeekFields;  
 import java.util.Locale; 
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 /**
  * @author Yevhen
  */
@@ -24,7 +25,7 @@ public class BbakerReadWrite {
     
     private boolean verboseErrors = false;
  
-    public void BbakerReadWrite() {
+    public BbakerReadWrite() {
         this.weeklyOutcomesFile = "outcomes_w"+getCurrentWeekNumber()+".csv";
     }
     
@@ -35,6 +36,25 @@ public class BbakerReadWrite {
         return String. valueOf(week);
     }    
 
+    public void Log2File(String meassage){
+        BufferedWriter outputLog;
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        
+        try {
+            outputLog = new BufferedWriter(new FileWriter(historyDataFile, true));
+            
+            outputLog.write(dtf.format(now) + "\t " + meassage);
+            outputLog.newLine();
+            outputLog.close();
+           
+        } catch (Exception e) {
+            if (verboseErrors) System.out.println("ERROR [Log2File]: " + e);
+        }            
+    }    
+
+    
     public boolean loadFromFile(String[] _players, String FileName) {
         BufferedReader inputF;
         try {

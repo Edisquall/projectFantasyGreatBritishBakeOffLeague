@@ -11,19 +11,21 @@ import java.util.Scanner;
  * @author User
  */
 public class BbakerMenu {
-    //Init
-
+//      InitIdeally, there should be a menu system to help players navigate the system.
+//      Ideally, a player should be able to see a list of all the players and their cumulative point total so far.
+//      Ideally, a player should be able to see their own history of predictions and point scoring.
+    
     public void Show() {
         String choice;
         String PlayerName;
                 
-        System.out.println("...----==== USER MENU ====----...");
+        System.out.println("...----==== MAIN MENU ====----...");
         System.out.println("0. Exit menu");
         System.out.println("1. Make prediction");
         System.out.println("2. Show predictions");
         System.out.println("3. Show all users predictions");
         System.out.println("4. Enter contestant data (Admin)");
-        System.out.println("--------------------------------\n");
+        System.out.println("---------------------------------\n");
                 
         boolean bInputOk = false;
         System.out.println("Please, enter menu number:");
@@ -78,7 +80,7 @@ public class BbakerMenu {
                         break;                        
                         
                     default:
-                        System.out.println("Please, enter menu number:");
+                        System.out.println("Please, enter correct menu number:");
                         break;
 
                 }

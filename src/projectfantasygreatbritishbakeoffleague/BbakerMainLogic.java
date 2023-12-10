@@ -8,7 +8,9 @@ package projectfantasygreatbritishbakeoffleague;
  * 
  * Known issues:
  * -------------
- * System supports only one destinct name of player. One needs enter usage of a pair of name and password as a way of solving OR DataBase!
+ * - System supports only one destinct name of player. One needs enter usage of a pair of name and password as a way of solving OR DataBase!
+ * - No accounting the state of contestants: elimination. If state is elimination then dont promt user to select
+ * 
  */
 
 import java.util.Scanner;

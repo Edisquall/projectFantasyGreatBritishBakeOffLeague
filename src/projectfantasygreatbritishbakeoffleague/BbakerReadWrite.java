@@ -141,7 +141,7 @@ public class BbakerReadWrite {
     }    
 
     public boolean AdminWriteContentantsData2File(String data){
-        // LINE FORMAT: ContestantName,currecntStatus
+        // LINE FORMAT: ContestantName,currentStatus
         return true;
     }   
     

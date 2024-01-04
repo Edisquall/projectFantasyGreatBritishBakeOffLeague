@@ -21,6 +21,7 @@ public class BbakerMenu {
         private BbakerInput userInp = new BbakerInput();
         private BbakerPlayer admin = new BbakerPlayer("1234");
         public BbakerPlayer currentPlayer = new BbakerPlayer();
+        public boolean AdminMode = false;
 
     public BbakerMenu() {
         //System.out.println("Init Menu");
@@ -58,6 +59,17 @@ public class BbakerMenu {
         System.out.println(currentPlayer.getName() + ", please, enter menu command number:");        
     }
     
+    public void ShowAdminMenu() {
+        if (!AdminMode) return;
+        System.out.println("...----==== ADMIN MENU ====----...");
+        System.out.println("[0] Exit Admin mode");
+        System.out.println("[1] Enter contestants data");
+        System.out.println("[2] Edit contestants");
+        System.out.println("[3] Edit players");
+        System.out.println("---------------------------------");
+        System.out.println(currentPlayer.getName() + ", please, enter menu command number:");        
+    }    
+    
     public void AskPlayerForName() {
         String PlayerName;
         do  {
@@ -87,59 +99,94 @@ public class BbakerMenu {
             try {
                 choice = sc.nextLine(); //choice = (char) System.in.read();
 
-                switch (choice) {
-                    case "0":
-                        menuShutDown();
-                        break;  
+                if(!AdminMode) {
+                    switch (choice) {
+                        case "0":
+                            menuShutDown();
+                            break;  
 
-                    case "1":
-                        System.out.println("Make my prediction");
-                        mainLogic.doUserPrediction();
-                        break;
+                        case "1":
+                            System.out.println("Make my prediction");
+                            mainLogic.doUserPrediction();
+                            break;
 
-                    case "2":
-                        //inWork();
-                        mainLogic.ShowPlayerPredictions();
-                        break;
+                        case "2":
+                            //inWork();
+                            mainLogic.ShowPlayerPredictions();
+                            break;
 
-                    case "3":
-                        clearScreen();
-                        System.out.println("Show all users score");
-                        mainLogic.getAllUsersScore();
-                        break;
+                        case "3":
+                            clearScreen();
+                            System.out.println("Show all users score");
+                            mainLogic.getAllUsersScore();
+                            break;
 
-                    case "4":
-                        clearScreen();
-                        System.out.println("Show all contestants");
-                        mainLogic.getAllContestants();
-                        break;
+                        case "4":
+                            clearScreen();
+                            System.out.println("Show all contestants");
+                            mainLogic.getAllContestants();
+                            break;
 
-                    case "9": // For test purposes only. WILL BE REMOVED BEFORE DEPLOY
-                        clearScreen();
-                        mainLogic.ShowPlayerInfo();
-                        break;
+                        case "9": // For test purposes only. WILL BE REMOVED BEFORE DEPLOY
+                            clearScreen();
+                            mainLogic.ShowPlayerInfo();
+                            break;
 
-                    case "5":
-                        showRules();
-                        break;
+                        case "5":
+                            showRules();
+                            break;
+
+                        case "999": // Hidden menu option for ADMIN
+                            String adminPass = userInp.getUserInput("Please, enter admin's password:");
+                            if (admin.IsAdmin(adminPass)) {
+                                //mainLogic.AdminEnterData();
+                                 ShowAdminMenu();
+                                 AdminMode = true;
+                            } else {
+                                System.out.println("Wrong admin's password!");
+                                System.out.println("Please, enter menu number:");
+                            }
+                            break; 
+
+                        default:
+                            System.out.println("Please, enter correct menu number:");
+                            break;
+
+                    }
+                } else { // Admin mode
+                    switch (choice) {
+                        case "0":
+                            AdminMode = false;
+                            break;  
+
+                        case "1":
+                            System.out.println("Enter contestants data");
+                            mainLogic.AdminEnterData();
+                            break;
+
+                        case "2":
+                            System.out.println("Edit contestants");
+                            //mainLogic.PlayerContestant();
+                            //ToDO: Edit contestant's data - state, score, name
+                            break;
                         
-                    case "999": // Hidden menu option for ADMIN
-                        String adminPass = userInp.getUserInput("Please, enter admin's password:");
-                        if (admin.IsAdmin(adminPass)) {
-                            //mainLogic.AdminEnterData();
-                            inWork();
-                        } else {
-                            System.out.println("Wrong admin's password!");
-                            System.out.println("Please, enter menu number:");
-                        }
-                        break; 
-                        
-                    default:
-                        System.out.println("Please, enter correct menu number:");
-                        break;
+                        case "3":
+                            System.out.println("Edit players");
+                            //ToDO: Edit player's data - scores, names
+                            //mainLogic.PlayerEdit();
+                            break;
 
+                        default:
+                            System.out.println("Please, enter correct menu number:");
+                            break;                            
+                    }
                 }
-                ShowPromt();
+                
+                if(!AdminMode) {
+                    ShowPromt();
+                    }else {
+                    ShowAdminMenu();
+                }
                 
             } catch (Exception e){
                 System.out.println("Ops, enter a number, please!");

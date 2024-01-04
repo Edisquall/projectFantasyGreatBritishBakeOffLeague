@@ -13,6 +13,7 @@ public class BbakerPlayer {
     private double score;
     private boolean isNewPlayer;
     private String passHash;
+    private boolean isAdmin = false;
 
     public BbakerPlayer(){
         score = 0;
@@ -24,10 +25,19 @@ public class BbakerPlayer {
         return isNewPlayer;
     }
 
+    public boolean userIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public void setIsNewPlayer(boolean isNewPlayer) {
         this.isNewPlayer = isNewPlayer;
     }
     public BbakerPlayer(String pass){
+        isAdmin = true;
         passHash = "<<<" + pass + ">>>";
     }
     

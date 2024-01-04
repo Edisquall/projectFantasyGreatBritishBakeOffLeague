@@ -19,11 +19,12 @@ public class BbakerMainLogic {
     private Scanner sc  = new Scanner(System.in);
     private BbakerInput userInp = new BbakerInput();    
     public BbakerReadWrite rwFile =  new BbakerReadWrite();
-
+    
     private int MaxPlayersCount = 100;
     private String[] players = new String[MaxPlayersCount];
     private String[] predictions = new String[MaxPlayersCount];
     private String[] contestants = new String[MaxPlayersCount];
+    private String[] contestantsUpdated = new String[MaxPlayersCount];
     
     public int totalPlayersCount = 0;
     public int totalContestantsCount = 0;
@@ -76,9 +77,9 @@ public class BbakerMainLogic {
         int ind = 0;
         contestants[ind] = "Dan,active,1";
         contestants[++ind] = "Josh,active,20";
-        contestants[++ind] = "Matty,active,30";
-        contestants[++ind] = "Tasha,active,20";
-        contestants[++ind] = "Cristy,eliminated,0";
+        //contestants[++ind] = "Matty,active,30";
+       // contestants[++ind] = "Tasha,active,20";
+       // contestants[++ind] = "Cristy,eliminated,0";
         CountContestants();
     }
     
@@ -159,6 +160,19 @@ public class BbakerMainLogic {
         }
         return true;
     }
+
+    public boolean IsContestantExists(String ContName) {
+        if (totalContestantsCount==0) return false;
+        int indName = 0;
+        String csvSplitBy = ",";
+        for (String p: contestants) {
+            if (p!=null ) {
+                String[] ContestantData = p.split(csvSplitBy);
+                if (ContName.equalsIgnoreCase( ContestantData[indName])) return true;
+            }
+        }
+        return false;
+    }
     
     public void ShowPlayerInfo(){
         System.out.println("User name: " + ProjectFantasyGreatBritishBakeOffLeague.userMenu.currentPlayer.getName() ); 
@@ -166,8 +180,102 @@ public class BbakerMainLogic {
         System.out.println("----------------------------------------------------");
         //List of users predicts
     }
+
+    public void ContListDebug(){
+        int cnt=0;
+        String csvSplitBy = ",";
+        System.out.println("#\tName\t\tState\t\tPoints\t");
+        System.out.println("----------------------------------------------------------------");
+        int indName = 0, indState = 1, indPoints = 2;
+        for (String p: contestants) {
+            if (p!=null ) {
+                cnt++;
+                String[] ContestantData = p.split(csvSplitBy);
+                System.out.println(cnt + "\t" + ContestantData[indName] + "\t\t" + ContestantData[indState] + "\t\t\t" + ContestantData[indPoints] );
+            }
+        }
+        System.out.println("----------------------------------------------------------------");
+        
+        cnt=0;
+        for (String p: contestantsUpdated) {
+            if (p!=null ) {
+                cnt++;
+                String[] ContestantData = p.split(csvSplitBy);
+                System.out.println(cnt + "\t" + ContestantData[indName] + "\t\t" + ContestantData[indState] + "\t\t\t" + ContestantData[indPoints] );
+            }
+        }
+        System.out.println("----------------------------------------------------------------");        
+    }
     
-    public void updatePlayersPredictions(){
+    public void AdminEnterData(){
+        //LINE FORMAT: date,ContestantName,awardedpoints
+
+        ShowContestantsTable(); // Show to player all contestans
+        System.out.println("FORMAT: Josh,active,20 [POSSIBLE states are: active, eliminated, delete ] or enter CANCEL to exit data entering\n");
+
+        boolean canGoOn = false, getPoints = true;
+        int cnt=0;
+        String tmpContestantName , tmpContState, tmpContPoints; double dblContPoints =0;
+        int indName = 0, indState = 1, indPoints = 2; String csvSplitBy = ",";
+        for (String p: contestants) {
+            if (p!=null ) {
+                String[] ContestantData = p.split(csvSplitBy);
+                System.out.println("--- New data for " + ContestantData[indName] + ":");
+                canGoOn = false;
+                do{ // Get -- state
+                    tmpContState = AskPlayerForContestantName("Enter " + ContestantData[indName] + "'s state [active, eliminated, delete]: ");
+                    if(tmpContState.equalsIgnoreCase("cancel")) return; // Exit
+                    if (!tmpContState.isEmpty() && ( tmpContState.equalsIgnoreCase("active") || tmpContState.equalsIgnoreCase("eliminated") || tmpContState.equalsIgnoreCase("delete") )  ) {
+                        if (tmpContState.equalsIgnoreCase("delete")){
+                            contestantsUpdated[cnt] = ContestantData[indName] + ",delete,0";
+                            cnt++;
+                            getPoints = false;
+                            continue;
+                        }
+                        canGoOn = true;
+                    } else {
+                        System.out.println("Wrong state, try once again or enter CANCEL to exit");
+                    }
+                } while (!canGoOn);
+
+                if (getPoints) { // Get points if state!=delete
+                    canGoOn = false;
+                    do{
+                        tmpContPoints = AskPlayerForContestantName("Enter " + ContestantData[indName] + "'s points [number]: ");
+                        if(tmpContPoints.equalsIgnoreCase("cancel")) return; // Exit
+                        try{
+                            dblContPoints = Double.valueOf(tmpContPoints);
+                            contestantsUpdated[cnt] = ContestantData[indName] + ","+tmpContState+","+tmpContPoints;
+                            cnt++;
+                            canGoOn = true;
+                        } catch (Exception e){
+                            System.out.println("Wrong number, try once again or enter CANCEL to exit");
+                        }
+
+                    } while (!canGoOn);
+                }
+                
+                
+            }
+        } //next contestant
+        
+        System.out.println("--- WHAT we have ------");
+        //ContListDebug();
+
+//        ---------------------------------------------------
+//        1	Dan		active		1
+//        2	Josh		active		20
+//        3	Matty		active		30
+//        4	Tasha		active		20
+//        5	Cristy		eliminated	0
+//        ----------------------------------------------------
+//        1	Dan		active              10
+//        2	Josh		delete              0
+//        3	Matty		active              33
+//        4	Tasha		active              44
+//        5	Cristy		eliminated          10
+//        ----------------------------------------------------
+
          //Recalculate users scores after admin update contestants data
                   
         //        Weekly points awarded up to and including episode nine:
@@ -182,9 +290,38 @@ public class BbakerMainLogic {
         //            The other two finalists chosen after episode one and before episode two = 2 points each
         //            Winner of the final episode, chosen after episode nine = 4 points
         //            No technical round or elimination nominations for the final episode
-         
-         
-     }
+
+        // Finally calc statistics
+        int index = 0;
+        double max_score = -1000;
+        String BestBakerName, bakerToLeave, technicalRoundBaker;
+        for (String p: contestants) {
+ 
+            String[] oldContestantData = p.split(csvSplitBy);
+            String[] newContestantData = contestantsUpdated[index].split(csvSplitBy);
+
+            //System.out.println(index + "\t" + oldContestantData[indName] + "\t\t" + oldContestantData[indState] + "->" + newContestantData[indState] + "\t\t\t" + oldContestantData[indPoints] + "->" + newContestantData[indPoints] );
+            
+            double curContatnP = Double.valueOf(newContestantData[indPoints]);
+            if (curContatnP>max_score){
+                max_score = curContatnP;
+                BestBakerName = oldContestantData[indName];
+            }
+            
+            if (!oldContestantData[indState].equalsIgnoreCase("eliminated") && newContestantData[indState].equalsIgnoreCase("eliminated") ) {
+                bakerToLeave = oldContestantData[indName];
+            }
+            
+            index++;
+        }
+
+        
+        // make admin input data then write to file
+        //String data = " ";
+        //rwFile.AdminWriteContentantsData2File(data);
+
+    }  
+
     
      public void getAllUsersScore(){
         ShowPlayersTable();
@@ -342,16 +479,5 @@ public class BbakerMainLogic {
         
     }  
 
-    public void AdminEnterData(){
-        //LINE FORMAT: date,ContestantName,awardedpoints
-
-        System.out.println("AdminEnterData");
-        System.out.println("---------------------------------\n");
-        // make admin input data then write to file
-        String data = " ";
-        rwFile.AdminWriteContentantsData2File(data);
-        updatePlayersPredictions(); // Recalculate Plaeyrs scores according to new results of show
-
-    }      
-    
+       
 }
